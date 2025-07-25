@@ -4,9 +4,8 @@ import {Card} from './Card.jsx'
 
 const initCards = []
 for (let i = 1; i< 11; i++) {
-        initCards.push({id: i, guessed: false});
+        initCards.push({id: i, guessed: false, imageURL: null});
     }
-
 
 export function MemoryGame () {
     const [imageURL, setImageURL] = useState(null)
