@@ -4,7 +4,7 @@ import {Card} from './Card.jsx'
 import { randomIntSet } from '../randomNumber.jsx'
 
 
-const POKEMONAMOUNT = 10;
+const POKEMONAMOUNT = 7;
 const MAXPOKEMONID = 493;
 const initPokemonIdSet = randomIntSet(POKEMONAMOUNT, MAXPOKEMONID)
 const initPokemonId = Array.from(initPokemonIdSet)
@@ -58,7 +58,7 @@ export function MemoryGame () {
         } else {
             setCards(
                 cards.map(card => {
-                    return card.id == id ? {id: id, guessed: true} : card;
+                    return card.id == id ? {...card, guessed: true} : card;
                    }
                 )
             )
