@@ -1,23 +1,42 @@
 import { useEffect, useState } from 'react'
 import '../styles/MemoryGame.css'
 import {Card} from './Card.jsx'
+import { randomIntSet } from '../randomNumber.jsx'
 
+
+const POKEMONAMOUNT = 10;
+const MAXPOKEMONID = 493;
+const initPokemonIdSet = randomIntSet(POKEMONAMOUNT, MAXPOKEMONID)
+const initPokemonId = Array.from(initPokemonIdSet)
 const initCards = []
-for (let i = 1; i< 11; i++) {
-        initCards.push({id: i, guessed: false, imageURL: null});
+for (let i = 0; i< POKEMONAMOUNT; i++) {
+        initCards.push({id: initPokemonId[i], guessed: false, imgUrl: null});
     }
 
-export function MemoryGame () {
-    const [imageURL, setImageURL] = useState(null)
-    useEffect(() => {
-        fetch("https://pokeapi.co/api/v2/pokemon/9", {mode: "cors"})
-            .then((response) => response.json())
-            .then(((response) => setImageURL(response["sprites"]["other"]["official-artwork"]["front_default"])))
-    }, [])
+const getPokemonArt = async (entry) => {
+    const baseUrl = "https://pokeapi.co/api/v2/pokemon/";
+    const response = await fetch(`${baseUrl}${entry}`, {mode: "cors"})
+    const responseJson = await response.json()
+    const artURL = responseJson["sprites"]["other"]["official-artwork"]["front_default"]
+    return artURL
+}     
 
+export function MemoryGame () {
+    useEffect(() => {
+        const assignImageUrls = async () => {
+            const updatedCards = await Promise.all(
+                cards.map(async (card) => {
+                    const artURL = await getPokemonArt(card.id);
+                    return { ...card, imgUrl: artURL };
+                })
+            );
+            setCards(updatedCards);
+        };
+        assignImageUrls();
+    }, [])
     const [cards, setCards] = useState(initCards)
     const [bestScore, setBestScore] = useState(0)
-
+    console.log(cards)
     const guessedCount = cards.filter(card => card.guessed).length;
 
     const shuffleList = (array) => {
@@ -55,11 +74,11 @@ export function MemoryGame () {
         key={card.id}
         id={card.id}
         guessed={card.guessed}
+        imgUrl={card.imgUrl}
         handleCardChange={handleCardChange}
         />
     ))}
     </div>
-    <img src={imageURL} alt={"Image did not fetch"}/>
     </>
     )
 }
