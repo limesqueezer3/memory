@@ -33,6 +33,7 @@ export function MemoryGame () {
             setCards(updatedCards);
         };
         assignImageUrls();
+        
     }, [])
     const [cards, setCards] = useState(initCards)
     const [bestScore, setBestScore] = useState(0)
