@@ -36,7 +36,6 @@ export function MemoryGame () {
     }, [])
     const [cards, setCards] = useState(initCards)
     const [bestScore, setBestScore] = useState(0)
-    console.log(cards)
     const guessedCount = cards.filter(card => card.guessed).length;
 
     const shuffleList = (array) => {
